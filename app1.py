@@ -14,9 +14,11 @@ from fuzzywuzzy import fuzz
 import base64
 from io import BytesIO
 import time
+import xlsxwriter
+from SessionState import get
 
 st.set_option('deprecation.showfileUploaderEncoding', False)
-
+ 
 @st.cache()
 def data_original(voc_data_orig, svoc_data_orig):
     voc_data = voc_data_orig[6:]
@@ -461,6 +463,24 @@ def main():
         st.success("process successful")
         #st.table(actual_svoc.iloc[0:5, 0:5])
         #st.markdown(get_table_download_link(actual_svoc), unsafe_allow_html=True)
-               
-if __name__ == "__main__":
+              
+#if __name__ == "__main__":
+#    main()
+
+session_state = get(password='')
+
+if session_state.password != 'Aspirine':
+    pwd_placeholder = st.empty()
+    pwd = pwd_placeholder.text_input("Login to your Tics Calculator:", value="", type="password")
+    session_state.password = pwd
+    if session_state.password == '':
+        st.info("please enter the valid password for user authentication")
+    else:    
+        if session_state.password == 'pwd123':
+            pwd_placeholder.empty()
+            main()
+        else:
+            st.error("the password you entered is incorrect")
+else:
     main()
+#
